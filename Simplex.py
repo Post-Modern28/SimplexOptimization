@@ -12,12 +12,13 @@ def apply_simplex_maximization(main_function, constraints_matrix,
     constraints_matrix = np.hstack((constraints_matrix, np.eye(constraints_matrix.shape[0])))
     constraints_matrix = np.hstack((constraints_matrix, constraints_vector.transpose()))
     main_function = np.hstack((main_function, np.zeros(constraints_matrix.shape[0] + 1)))
+    main_function *= -1
     constraints_matrix = np.vstack((main_function, constraints_matrix))
     shp = constraints_matrix.shape
-    basis_indices = list(range(n, 2 * n))
+    basis_indices = list(range(n, 2 * n))  # not sure if it's right when there are more than n constraints
     iter_num = 1
-    while np.any(constraints_matrix[0, : shp[1] - 1] > 0):
-        pivot_index = np.argmax(constraints_matrix[0, :shp[1] - 1])
+    while np.any(constraints_matrix[0, : shp[1] - 1] < 0):
+        pivot_index = np.argmin(constraints_matrix[0, :shp[1] - 1])
         ratios = np.divide(constraints_matrix[1:, -1],  constraints_matrix[1:, pivot_index])
         ratios[ratios < 0] = np.inf
         pivot_row_index = np.argmin(ratios) + 1
@@ -39,8 +40,8 @@ def apply_simplex_maximization(main_function, constraints_matrix,
         if i != n-1:
             print(", ", end='')
     resulting_vals = np.array(resulting_vals)
-    z = resulting_vals @ init_func
-    print(f'\nMaximal value of the function: {z}')
+    z = resulting_vals @ init_func  # since it fixed now, z is also just constraints_matrix[0][-1]
+    print(f'\nMaximal value of the function: {round(z, approx)}')
 
 
 
