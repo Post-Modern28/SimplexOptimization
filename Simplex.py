@@ -9,16 +9,17 @@ def apply_simplex_maximization(main_function, constraints_matrix,
     init_func = main_function[:]
     # Doing some concatenation operations to create a big matrix
     constraints_vector = np.expand_dims(constraints_vector, axis=0)
-    constraints_matrix = np.hstack((constraints_matrix, np.eye(n)))
+    constraints_matrix = np.hstack((constraints_matrix, np.eye(constraints_matrix.shape[0])))
     constraints_matrix = np.hstack((constraints_matrix, constraints_vector.transpose()))
-    main_function = np.hstack((main_function, np.zeros(n + 1)))
+    main_function = np.hstack((main_function, np.zeros(constraints_matrix.shape[0] + 1)))
     constraints_matrix = np.vstack((main_function, constraints_matrix))
     shp = constraints_matrix.shape
     basis_indices = list(range(n, 2 * n))
     iter_num = 1
     while np.any(constraints_matrix[0, : shp[1] - 1] > 0):
         pivot_index = np.argmax(constraints_matrix[0, :shp[1] - 1])
-        ratios = constraints_matrix[1:, -1] / constraints_matrix[1:, pivot_index]
+        ratios = np.divide(constraints_matrix[1:, -1],  constraints_matrix[1:, pivot_index])
+        ratios[ratios < 0] = np.inf
         pivot_row_index = np.argmin(ratios) + 1
         constraints_matrix[pivot_row_index] = constraints_matrix[pivot_row_index] / constraints_matrix[pivot_row_index][pivot_index]
         for i in range(shp[0]):
