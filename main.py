@@ -14,8 +14,12 @@ def main():
     b = np.array(list(map(int, input().split())))
 
     approximation_accuracy = int(input("Enter the approximation accuracy:\n"))
-
-    Simplex.apply_simplex_maximization(C, A, b, approximation_accuracy)
+    flag = int(input("maximize or minimize? [1/2]: "))
+    if flag == 1:
+        Simplex.apply_simplex_maximization(C, A, b, approximation_accuracy)
+    elif flag == 2:
+        #Simplex.apply_simplex_maximization(C*(-1), A, b, approximation_accuracy)
+        Simplex.apply_simplex_minimization(C, A, b, approximation_accuracy)
 
 
 if __name__ == "__main__":
