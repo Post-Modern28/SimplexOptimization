@@ -1,11 +1,11 @@
 from typing import Optional, List
-import time
 import numpy as np
 
 
 def apply_simplex_maximization(main_function, constraints_matrix,
                                constraints_vector, approx=0) -> None:
     n = len(main_function)
+    eps = 10 ** -9
     constraints_matrix = make_matrix(main_function, constraints_matrix, constraints_vector)
     shp = constraints_matrix.shape
     basis_indices = list(range(n, n + constraints_matrix.shape[0]-1))
@@ -15,7 +15,7 @@ def apply_simplex_maximization(main_function, constraints_matrix,
     while np.any(constraints_matrix[0, : shp[1] - 1] < 0):
         pivot_index = np.argmin(constraints_matrix[0, :shp[1] - 1])
         ratios = np.divide(constraints_matrix[1:, -1],  constraints_matrix[1:, pivot_index])
-        ratios[ratios <= 0] = np.inf
+        ratios[ratios <= 0+eps] = np.inf
         if np.all(ratios == np.inf):
             print("Method is not applicable!")
             return
@@ -43,7 +43,7 @@ def apply_simplex_maximization(main_function, constraints_matrix,
 
 def apply_simplex_minimization(main_function, constraints_matrix,
                                constraints_vector, approx=0) -> None:
-    eps = 10**-5
+    eps = 10**-9
     n = len(main_function)
     constraints_matrix = make_matrix(main_function, constraints_matrix, constraints_vector)
     shp = constraints_matrix.shape
@@ -88,4 +88,3 @@ def make_matrix(function, constraints, constraints_free_variables):
     function = np.hstack((function, np.zeros(constraints.shape[0]+1)))
     constraints = np.vstack((function, constraints))
     return constraints
-
