@@ -1,6 +1,7 @@
 import numpy as np
 
 def interior_point_algorithm(main_function: np.array, constraints_matrix: np.array, init_point: np.array, a) -> None:
+    print("When a = " + str(a) + ":")
     c = main_function
     A = constraints_matrix
     D = np.diag(init_point)
@@ -10,7 +11,7 @@ def interior_point_algorithm(main_function: np.array, constraints_matrix: np.arr
     x = init_point
     r = max(np.amax(diff), np.amin(diff), key=abs)
     while abs(r) > 0.0001:
-        print(f"Iteration {n}:")
+        # print(f"Iteration {n}:")
         x_old = x
         A_prime = A @ D
         c_prime = D @ c
@@ -25,17 +26,17 @@ def interior_point_algorithm(main_function: np.array, constraints_matrix: np.arr
         y = np.ones(A_prime_def_inverse.shape[0]) + a / v * c_proj
         x = D @ y
         answer = x
-        print(answer)
+        # print(answer)
         D = np.diag(x)
         diff = x - x_old
         r = np.linalg.norm(diff, ord=2)
         n += 1
 
-    print("\nThe final answer is:")
+    print("After the " + str(n) + " iterations" + " the final answer is:")
     num_of_constraints = 2
     for i in range(num_of_constraints):
-        print(f"x{i+1} = {answer[i]}")
-
+        print(f"x{i + 1} = {answer[i]}")
+    print("---------------------------")
 
 def prepare_for_algorithm(c_array, A_array, b_vector):
     n = len(b_vector)
@@ -43,6 +44,7 @@ def prepare_for_algorithm(c_array, A_array, b_vector):
     x, residuals, _, _ = np.linalg.lstsq(A_array, b_vector, rcond=None)
     if np.all(residuals):
         print(f"The initial solution is: {x}")
+        print("---------------------------")
     else:
         print("The method is not applicable!")
     return c_array, x
@@ -65,15 +67,16 @@ if __name__ == "__main__":
     print("Enter the variables of right-hand side numbers in constraints:")
     b = np.array(list(map(float, input().split())))
     approximation_accuracy = int(input("Enter the approximation accuracy:\n"))
-    
-    alpha = 0.5
-    # alpha = 0.9
-    
-    flag = int(input("maximize or minimize? [1/2]: "))
-    if flag == 1:
-            # what will be???
-    elif flag == 2:
-        # what will be????
-        
+
+    alpha_1 = 0.5
+    alpha_2 = 0.9
+
+    # flag = int(input("maximize or minimize? [1/2]: "))
+    # if flag == 1:
+    # # what will be???
+    # elif flag == 2:
+    # # what will be????
+
     c, x = prepare_for_algorithm(c, A, b)
-    interior_point_algorithm(c, A, x, alpha)
+    interior_point_algorithm(c, A, x, alpha_1)
+    interior_point_algorithm(c, A, x, alpha_2)
