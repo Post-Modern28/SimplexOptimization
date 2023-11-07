@@ -1,6 +1,8 @@
 import numpy as np
 
-def interior_point_algorithm(main_function: np.array, constraints_matrix: np.array, init_point: np.array, a) -> None:
+
+def interior_point_algorithm(main_function: np.array, constraints_matrix: np.array, init_point: np.array, a,
+                             num_of_constraints) -> int:
     print("When a = " + str(a) + ":")
     c = main_function
     A = constraints_matrix
@@ -33,20 +35,29 @@ def interior_point_algorithm(main_function: np.array, constraints_matrix: np.arr
         n += 1
 
     print("After the " + str(n) + " iterations" + " the final answer is:")
-    num_of_constraints = 2
     for i in range(num_of_constraints):
         print(f"x{i + 1} = {answer[i]}")
     print("---------------------------")
+    return answer
+
 
 def prepare_for_algorithm(c_array, A_array, b_vector):
     n = len(b_vector)
     c_array = np.append(c_array, [0] * n)
-    x, residuals, _, _ = np.linalg.lstsq(A_array, b_vector, rcond=None)
+
+    x = np.array(list(map(float, input("Enter the initial solution:\n").split())))
+
+    # Check the  method applicability
+    A = np.array(A_array)
+    b = np.array(b_vector)
+    residuals = np.array([np.dot(A[i], x) - b[i] for i in range(n)])
+
     if np.all(residuals):
+        print("The method is not applicable!")
+        exit()
+    else:
         print(f"The initial solution is: {x}")
         print("---------------------------")
-    else:
-        print("The method is not applicable!")
     return c_array, x
 
 
@@ -66,17 +77,26 @@ if __name__ == "__main__":
     A = np.array(A)
     print("Enter the variables of right-hand side numbers in constraints:")
     b = np.array(list(map(float, input().split())))
-    approximation_accuracy = int(input("Enter the approximation accuracy:\n"))
+    approximation_accuracy = int(input("Enter the approximation accuracy(number of decimal places):\n"))
 
     alpha_1 = 0.5
     alpha_2 = 0.9
 
-    # flag = int(input("maximize or minimize? [1/2]: "))
-    # if flag == 1:
-    # # what will be???
-    # elif flag == 2:
-    # # what will be????
+    flag = int(input("maximize or minimize? [1/2]: \n"))
+    if flag == 1:
+        pass
+    elif flag == 2:
+        c = -c
 
     c, x = prepare_for_algorithm(c, A, b)
-    interior_point_algorithm(c, A, x, alpha_1)
-    interior_point_algorithm(c, A, x, alpha_2)
+    answer = interior_point_algorithm(c, A, x, alpha_1, num_of_constraints)
+
+    objective_function = np.dot(c, answer)
+    print(f"The value of objective function is: {objective_function}")
+    print("---------------------------")
+
+    answer = interior_point_algorithm(c, A, x, alpha_2, num_of_constraints)
+
+    objective_function = np.dot(c, answer)
+    print(f"The value of objective function is: {objective_function}")
+    print("---------------------------")
