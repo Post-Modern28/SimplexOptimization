@@ -1,9 +1,15 @@
 import numpy as np
-from NorthStar import NorthStar
-np.seterr(all="ignore")
 
 
 def Vogel(supplies: np.array, costs: np.array, demand: np.array):
+    """
+    Solves the transportation problem using Vogel's approximation
+
+    :param supplies:  array representing stations with supplies
+    :param costs: matrix representing a price of moving 1 unit from i-th supply base to j-th destination point
+    :param demand: array representing destination points and their demands
+    :return: Total cost of achieved feasible solution
+    """
     if sum(supplies) != sum(demand):
         print("The problem is not balanced!")
         return -1
@@ -34,22 +40,17 @@ def Vogel(supplies: np.array, costs: np.array, demand: np.array):
 
 
 def calculate_differences(costs: np.array, axis=0) -> np.array:
+    np.seterr(all="ignore")
     if not axis:
         s = np.sort(costs, axis=0)
         diff = np.array([s[1, i]-s[0, i] for i in range(costs.shape[1])])
-
         diff = np.nan_to_num(diff, posinf=0, nan=0, neginf=0)
-        # print(diff)
         return np.array(diff)
 
     s = np.sort(costs, axis=1)
-
     diff = np.array([s[i, 1] - s[i, 0] for i in range(costs.shape[0])])
     diff = np.nan_to_num(diff, posinf=1, nan=0, neginf=0)
-
-    # print(diff)
     return np.array(diff)
-
 
 
 def main():

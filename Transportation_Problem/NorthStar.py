@@ -2,11 +2,19 @@ import numpy as np
 
 
 def NorthStar(supplies: np.array, costs: np.array, demand: np.array):
+    """
+    Solves the transportation problem using North Star algorithm
+
+    :param supplies:  array representing stations with supplies
+    :param costs: matrix representing a price of moving 1 unit from i-th supply base to j-th destination point
+    :param demand: array representing destination points and their demands
+    :return: Total cost of achieved feasible solution
+    """
     if sum(supplies) != sum(demand):
         print("The problem is not balanced!")
         return -1
-    result = np.zeros(costs.shape)
 
+    result = np.zeros(costs.shape)
     row = column = 0
     while row != len(supplies) and column != len(demand):
         taken = min(demand[column], supplies[row])

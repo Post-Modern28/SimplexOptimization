@@ -1,7 +1,16 @@
 import numpy as np
-import time
+
 
 def Russel(supplies: np.array, costs: np.array, demand: np.array):
+    """
+    Solves the transportation problem using Russel's approximation
+
+    :param supplies:  array representing stations with supplies
+    :param costs: matrix representing a price of moving 1 unit from i-th supply base to j-th destination point
+    :param demand: array representing destination points and their demands
+    :return: Total cost of achieved feasible solution
+
+    """
     if sum(supplies) != sum(demand):
         print("The problem is not balanced!")
         return -1
@@ -25,8 +34,6 @@ def Russel(supplies: np.array, costs: np.array, demand: np.array):
     summary = np.sum(result)
     print(f"Total cost: {summary}")
     return summary
-
-
 
 
 def main():
