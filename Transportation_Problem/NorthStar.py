@@ -1,9 +1,9 @@
 import numpy as np
 
 
-def NorthStar(supplies: np.array, costs: np.array, demand: np.array):
+def north_west(supplies: np.array, costs: np.array, demand: np.array) -> float:
     """
-    Solves the transportation problem using North Star algorithm
+    Solves the transportation problem using North-West algorithm
 
     :param supplies:  array representing stations with supplies
     :param costs: matrix representing a price of moving 1 unit from i-th supply base to j-th destination point
@@ -21,14 +21,14 @@ def NorthStar(supplies: np.array, costs: np.array, demand: np.array):
         result[row, column] = costs[row, column] * taken
         demand[column] -= taken
         supplies[row] -= taken
-        if demand[column] < supplies[row]:
-            column += 1
-        else:
+        if demand[column] < supplies[row]:  # if demand point is satisfied
+            column += 1  # move to next demand point
+        else:  # otherwise, move to next supply point
             row += 1
     print(result)
     summary = np.sum(result)
     print(f"Total cost: {summary}")
-    return summary
+    return summary[0]
 
 
 def main():
@@ -38,7 +38,7 @@ def main():
                       [9, 2, 3, 6]]).astype(float)
     print(np.max(costs, axis=1))
     demand = np.array([120, 50, 190, 110])
-    NorthStar(s, costs, demand)
+    north_west(s, costs, demand)
 
 
 if __name__ == "__main__":

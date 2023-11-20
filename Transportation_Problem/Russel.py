@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def Russel(supplies: np.array, costs: np.array, demand: np.array):
+def Russel(supplies: np.array, costs: np.array, demand: np.array) -> float:
     """
     Solves the transportation problem using Russel's approximation
 
@@ -15,25 +15,27 @@ def Russel(supplies: np.array, costs: np.array, demand: np.array):
         print("The problem is not balanced!")
         return -1
     result = np.zeros(costs.shape)
-    row_costs = np.max(costs, axis=1)
-    col_costs = np.max(costs, axis=0)
-    diff_matrix = costs - (row_costs.reshape(-1, 1) + col_costs.reshape(1, -1))
+    row_costs = np.max(costs, axis=1)  # find maximal element in each row
+    col_costs = np.max(costs, axis=0)  # find maximal element in each column
+    diff_matrix = costs - (row_costs.reshape(-1, 1) + col_costs.reshape(1, -1))  # construct a matrix diff_matrix,
+    # where diff_matrix[i][j] = costs[i][j] - (row_costs[i] + col_costs[j])
 
     while sum(demand) != 0:
+        # take the indices of minimal element in diff_matrix
         i, j = np.unravel_index(np.argmin(diff_matrix), diff_matrix.shape)
         taken = min(supplies[i], demand[j])
         result[i, j] = costs[i, j] * taken
         supplies[i] -= taken
         demand[j] -= taken
 
-        if supplies[i] == 0:
+        if supplies[i] == 0:  # if supply point is empty, nullify its row
             diff_matrix[i, :] = np.inf
-        if demand[j] == 0:
+        if demand[j] == 0:  # if demand point is satisfied, nullify its column
             diff_matrix[:, j] = np.inf
     print(result)
     summary = np.sum(result)
     print(f"Total cost: {summary}")
-    return summary
+    return summary[0]
 
 
 def main():

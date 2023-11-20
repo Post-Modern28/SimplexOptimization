@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def Vogel(supplies: np.array, costs: np.array, demand: np.array):
+def Vogel(supplies: np.array, costs: np.array, demand: np.array) -> float:
     """
     Solves the transportation problem using Vogel's approximation
 
@@ -15,10 +15,12 @@ def Vogel(supplies: np.array, costs: np.array, demand: np.array):
         return -1
     result = np.zeros(costs.shape)
     while sum(demand) != 0:
+        # find maximal difference among rows and columns
         row_diff = calculate_differences(costs, axis=1)
         column_diff = calculate_differences(costs, axis=0)
         col_max = max(column_diff)
         row_max = max(row_diff)
+        # pick minimal element in row/column with maximal difference
         if col_max > row_max:
             j = np.argmax(column_diff)
             i = np.argmin(costs[:, j])
@@ -29,17 +31,24 @@ def Vogel(supplies: np.array, costs: np.array, demand: np.array):
         result[i, j] = costs[i, j] * taken
         supplies[i] -= taken
         demand[j] -= taken
-        if demand[j] == 0:
+        if demand[j] == 0:  # if demand point is satisfied, nullify its column
             costs[:, j] = np.inf
-        if supplies[i] == 0:
+        if supplies[i] == 0:  # if supply point is empty, nullify its row
             costs[i, :] = np.inf
     print(result)
     summary = np.sum(result)
     print(f"Total cost: {summary}")
-    return summary
+    return summary[0]
 
 
 def calculate_differences(costs: np.array, axis=0) -> np.array:
+    """
+    Calculates differences between second minimal element in each column/row of a given matrix
+
+    :param costs: matrix representing a price of moving 1 unit from i-th supply base to j-th destination point
+    :param axis: 0 for column, 1 for row
+    :return: vector representing differences between second minimal and minimal element in each column/row
+    """
     np.seterr(all="ignore")
     if not axis:
         s = np.sort(costs, axis=0)
