@@ -13,10 +13,12 @@ def vogel(supplies: np.array, costs: np.array, demand: np.array):
 
     supplies = np.copy(supplies)
     demand = np.copy(demand)
+    costs = np.copy(costs)
     if sum(supplies) != sum(demand):
         print("The problem is not balanced!")
         return -1
     result = np.zeros(costs.shape)
+
     while sum(demand) != 0:
         # find maximal difference among rows and columns
         row_diff = calculate_differences(costs, axis=1)
@@ -56,21 +58,27 @@ def calculate_differences(costs: np.array, axis=0) -> np.array:
     if not axis:
         s = np.sort(costs, axis=0)
         diff = np.array([s[1, i]-s[0, i] for i in range(costs.shape[1])])
-        diff = np.nan_to_num(diff, posinf=0, nan=0, neginf=0)
+        diff = np.nan_to_num(diff, posinf=-5, nan=-1, neginf=0)
+        for i in range(len(diff)):
+            if diff[i] == -5:
+                diff[i] = s[0, i]
         return np.array(diff)
 
     s = np.sort(costs, axis=1)
     diff = np.array([s[i, 1] - s[i, 0] for i in range(costs.shape[0])])
-    diff = np.nan_to_num(diff, posinf=1, nan=0, neginf=0)
+    diff = np.nan_to_num(diff, posinf=-5, nan=-1, neginf=0)
+    for i in range(len(diff)):
+        if diff[i] == -5:
+            diff[i] = s[i, 0]
     return np.array(diff)
 
 
 def main():
-    s = np.array([160, 140, 170])
-    costs = np.array([[7, 8, 1, 2],
-                      [4, 5, 9, 8],
-                      [9, 2, 3, 6]]).astype(float)
-    demand = np.array([120, 50, 190, 110])
+    s = np.array([140, 180, 160])
+    costs = np.array([[2, 3, 4, 2, 4],
+                      [8, 4, 1, 4, 1],
+                      [9, 7, 3, 7, 2]]).astype(float)
+    demand = np.array([60, 70, 120, 130, 100])
     vogel(s, costs, demand)
 
 

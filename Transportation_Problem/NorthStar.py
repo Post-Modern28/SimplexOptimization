@@ -35,12 +35,11 @@ def north_west(supplies: np.array, costs: np.array, demand: np.array):
 
 
 def main():
-    s = np.array([160, 140, 170])
-    costs = np.array([[7, 8, 1, 2],
-                      [4, 5, 9, 8],
-                      [9, 2, 3, 6]]).astype(float)
-    print(np.max(costs, axis=1))
-    demand = np.array([120, 50, 190, 110])
+    s = np.array([140, 180, 160])
+    costs = np.array([[2, 3, 4, 2, 4],
+                      [8, 4, 1, 4, 1],
+                      [9, 7, 3, 7, 2]]).astype(float)
+    demand = np.array([60, 70, 120, 130, 100])
     north_west(s, costs, demand)
 
 
