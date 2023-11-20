@@ -1,7 +1,7 @@
 import numpy as np
 from Vogel import vogel
 from Russel import russel
-from NorthStar import north_west
+from NorthWest import north_west
 
 
 def main():
