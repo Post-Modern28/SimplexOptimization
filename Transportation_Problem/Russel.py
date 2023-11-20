@@ -1,7 +1,8 @@
 import numpy as np
 
 
-def Russel(supplies: np.array, costs: np.array, demand: np.array) -> float:
+def russel(supplies: np.array, costs: np.array, demand: np.array):
+
     """
     Solves the transportation problem using Russel's approximation
 
@@ -11,6 +12,9 @@ def Russel(supplies: np.array, costs: np.array, demand: np.array) -> float:
     :return: Total cost of achieved feasible solution
 
     """
+
+    supplies = np.copy(supplies)
+    demand = np.copy(demand)
     if sum(supplies) != sum(demand):
         print("The problem is not balanced!")
         return -1
@@ -35,7 +39,7 @@ def Russel(supplies: np.array, costs: np.array, demand: np.array) -> float:
     print(result)
     summary = np.sum(result)
     print(f"Total cost: {summary}")
-    return summary[0]
+    return summary
 
 
 def main():
@@ -44,8 +48,9 @@ def main():
                       [4, 5, 9, 8],
                       [9, 2, 3, 6]]).astype(float)
     demand = np.array([120, 50, 190, 110])
-    Russel(s, costs, demand)
+    russel(s, costs, demand)
 
 
 if __name__ == "__main__":
     main()
+

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def north_west(supplies: np.array, costs: np.array, demand: np.array) -> float:
+def north_west(supplies: np.array, costs: np.array, demand: np.array):
     """
     Solves the transportation problem using North-West algorithm
 
@@ -10,6 +10,9 @@ def north_west(supplies: np.array, costs: np.array, demand: np.array) -> float:
     :param demand: array representing destination points and their demands
     :return: Total cost of achieved feasible solution
     """
+
+    supplies = np.copy(supplies)
+    demand = np.copy(demand)
     if sum(supplies) != sum(demand):
         print("The problem is not balanced!")
         return -1
@@ -28,7 +31,7 @@ def north_west(supplies: np.array, costs: np.array, demand: np.array) -> float:
     print(result)
     summary = np.sum(result)
     print(f"Total cost: {summary}")
-    return summary[0]
+    return summary
 
 
 def main():
